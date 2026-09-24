@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Fatal Five Assessment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#141311;
+    --ink-2:#1C1A16;
+    --paper:#E8E2D3;
+    --paper-dim:#A39C8A;
+    --paper-faint:#6E695C;
+    --line:#3A362E;
+    --line-soft:#2A271F;
+    --accent:#C4462A;
+    --accent-dim:#7A3323;
+    --ok:#7C8F73;
+    --warn:#B98A3D;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'IBM Plex Serif', Georgia, serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:0 24px 120px;}
+  a{color:var(--paper);}
+
+  /* Header */
+  header{
+    padding:48px 0 28px;
+    border-bottom:1px solid var(--line);
+  }
+  .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.12em;
+    color:var(--paper-faint);
+    margin:0 0 18px;
+  }
+  h1{
+    font-family:'IBM Plex Serif', serif;
+    font-weight:600;
+    font-size:clamp(28px, 5vw, 40px);
+    line-height:1.15;
+    margin:0 0 14px;
+    letter-spacing:-0.01em;
+  }
+  .lede{
+    color:var(--paper-dim);
+    font-size:16px;
+    max-width:60ch;
+    margin:0 0 20px;
+  }
+  .instructions{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--paper-dim);
+    border-left:2px solid var(--accent-dim);
+    padding:10px 0 10px 16px;
+    margin:0;
+    line-height:1.6;
+  }
+  .instructions strong{color:var(--paper);}
+
+  /* Pattern sections */
+  .pattern{
+    padding:44px 0 8px;
+    border-bottom:1px solid var(--line-soft);
+    position:relative;
+  }
+  .pattern-head{
+    display:flex;
+    align-items:baseline;
+    gap:16px;
+    margin-bottom:6px;
+  }
+  .pnum{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--paper-faint);
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:2px 7px;
+    flex-shrink:0;
+  }
+  .pname{
+    font-size:22px;
+    font-weight:600;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .psub{
+    color:var(--paper-faint);
+    font-size:13.5px;
+    margin:0 0 24px 0;
+    font-style:italic;
+  }
+
+  .statement{
+    display:grid;
+    grid-template-columns:1fr auto;
+    align-items:center;
+    gap:18px;
+    padding:16px 0;
+    border-top:1px solid var(--line-soft);
+  }
+  .statement:first-of-type{border-top:none;}
+  .stext{font-size:15.5px; color:var(--paper);}
+  .sid{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--paper-faint);
+    font-size:12px;
+    margin-right:6px;
+  }
+  .scale{
+    display:flex;
+    gap:6px;
+    flex-shrink:0;
+  }
+  .chip{
+    width:34px; height:34px;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--paper-dim);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    border-radius:2px;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:background .12s ease, border-color .12s ease, color .12s ease;
+  }
+  .chip:hover{border-color:var(--paper-faint); color:var(--paper);}
+  .chip.active{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:var(--ink);
+    font-weight:600;
+  }
+  .scale-labels{
+    display:flex;
+    justify-content:space-between;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    color:var(--paper-faint);
+    margin-top:22px;
+    padding-top:2px;
+  }
+
+  .subtotal-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 0 28px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--paper-dim);
+  }
+  .subtotal-row .val{
+    font-size:20px;
+    color:var(--paper);
+    font-weight:600;
+  }
+  .subtotal-row .val .of{color:var(--paper-faint); font-weight:400; font-size:14px;}
+  .clear-section{
+    margin:0 0 8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--paper-faint);
+    padding:6px 12px;
+    border-radius:2px;
+    cursor:pointer;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .clear-section:hover{border-color:var(--accent-dim); color:var(--paper);}
+
+  /* Results */
+  #results{
+    padding:52px 0 0;
+  }
+  .results-head{margin-bottom:8px;}
+  .grand{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin:18px 0 30px;
+  }
+  .grand .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:56px;
+    font-weight:600;
+    line-height:1;
+  }
+  .grand .of{font-family:'IBM Plex Mono', monospace; color:var(--paper-faint); font-size:18px;}
+  .band{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.06em;
+    padding:5px 12px;
+    border-radius:2px;
+    border:1px solid var(--accent);
+    color:var(--accent);
+    margin-bottom:8px;
+  }
+  .band.ok{border-color:var(--ok); color:var(--ok);}
+  .band.warn{border-color:var(--warn); color:var(--warn);}
+  .band-desc{color:var(--paper-dim); font-size:15px; max-width:58ch; margin:14px 0 36px;}
+
+  .bars{margin:0 0 40px;}
+  .bar-row{margin-bottom:18px;}
+  .bar-label{
+    display:flex; justify-content:space-between;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--paper-dim);
+    margin-bottom:6px;
+  }
+  .bar-track{
+    height:10px;
+    background:var(--line-soft);
+    border-radius:1px;
+    overflow:hidden;
+  }
+  .bar-fill{
+    height:100%;
+    background:var(--accent);
+    border-radius:1px;
+    transition:width .4s ease;
+    width:0%;
+  }
+
+  .callout{
+    border-left:2px solid var(--accent-dim);
+    padding:14px 0 14px 18px;
+    color:var(--paper-dim);
+    font-size:14.5px;
+    margin:0 0 36px;
+  }
+  .callout strong{color:var(--paper);}
+
+  /* Sticky tally */
+  .tally{
+    position:fixed;
+    bottom:0; left:0; right:0;
+    background:var(--ink-2);
+    border-top:1px solid var(--line);
+    padding:12px 24px;
+    display:flex;
+    justify-content:center;
+    z-index:20;
+  }
+  .tally-inner{
+    max-width:760px; width:100%;
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--paper-dim);
+  }
+  .tally-inner .num{color:var(--paper); font-size:16px; font-weight:600;}
+  .progress-track{
+    flex:1; height:3px; background:var(--line); margin:0 20px; border-radius:2px; overflow:hidden;
+  }
+  .progress-fill{height:100%; background:var(--accent); width:0%; transition:width .3s ease;}
+
+  /* Buttons */
+  .actions{display:flex; gap:12px; flex-wrap:wrap; margin:8px 0 48px;}
+  button.btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.03em;
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--paper);
+    padding:11px 18px;
+    border-radius:2px;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  button.btn:hover{border-color:var(--paper-dim);}
+  button.btn.primary{
+    border-color:var(--accent);
+    color:var(--accent);
+  }
+  button.btn.primary:hover{background:rgba(196,70,42,0.1);}
+
+  footer{
+    padding:36px 0 100px;
+    border-top:1px solid var(--line-soft);
+    color:var(--paper-faint);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    line-height:1.7;
+  }
+  @media print{ .tally{display:none;} footer{padding-bottom:36px;} }
+
+  @media (max-width:560px){
+    .statement{grid-template-columns:1fr;}
+    .scale{justify-content:flex-start;}
+    .chip{width:30px; height:30px;}
+    .grand .num{font-size:42px;}
+    .tally{padding:10px 16px;}
+    .tally-inner{font-size:11px;}
+    .progress-track{margin:0 12px;}
+  }
+
+  /* Print styles */
+  @media print{
+    body{background:#fff; color:#111;}
+    .tally, .actions, header .instructions{display:none;}
+    .chip{border-color:#999; color:#333;}
+    .chip.active{background:#333; color:#fff; border-color:#333;}
+    .bar-fill{background:#555;}
+    .bar-track{background:#ddd;}
+    .band{border-color:#333; color:#111;}
+    a{color:#111;}
+    .pattern, #results{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <p class="tag">DIAGNOSTIC INSTRUMENT · 25 ITEMS · FROM "THE FATAL FIVE"</p>
+    <h1>The Fatal Five Assessment</h1>
+    <p class="lede">Five organizational failure patterns precede almost every disaster examined in this book, from the Titanic to the CrowdStrike outage. This instrument scores your own organization against the same five patterns, before they cost what they cost in the case studies.</p>
+    <p class="instructions">Rate each statement 1–5, where <strong>1 means "rarely true of us"</strong> and <strong>5 means "consistently true of us."</strong> Higher is healthier throughout. If more than one person is scoring, complete this independently before comparing answers — a wide spread on the same statement is itself a finding.</p>
+  </header>
+
+  <div id="patterns"></div>
+
+  <section id="results" style="display:none;">
+    <p class="tag">RESULTS</p>
+    <div class="results-head">
+      <h2 style="margin:0; font-size:24px; font-weight:600;">Your reading</h2>
+    </div>
+    <div class="grand">
+      <span class="num" id="grandTotal">0</span>
+      <span class="of">/ 125</span>
+    </div>
+    <div id="bandWrap">
+      <span class="band" id="bandLabel">—</span>
+      <p class="band-desc" id="bandDesc"></p>
+    </div>
+
+    <div class="bars" id="bars"></div>
+
+    <p class="callout"><strong>Read the five subtotals separately, not just the total.</strong> A high total with one pattern far below the rest is a different, more specific problem than an even score across the board — and it tells you exactly which chapter of the book to start with.</p>
+
+    <div class="actions">
+      <button class="btn primary" onclick="window.print()">Print / Save as PDF</button>
+      <button class="btn" onclick="copyResults()">Copy results as text</button>
+      <button class="btn" onclick="resetAll()">Start over</button>
+    </div>
+  </section>
+</div>
+
+<div class="tally" id="tallyBar">
+  <div class="tally-inner">
+    <span id="tallyText">0 of 25 answered</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span><span class="num" id="runningTotal">0</span> / 125</span>
+  </div>
+</div>
+
+<script>
+const PATTERNS = [
+  {
+    name: "Risk Management",
+    sub: "The pattern behind Banqiao, Deepwater Horizon, and Texas City.",
+    items: [
+      "We rarely get blindsided by a problem that, in hindsight, had clear warning signs.",
+      "Our risk process actually changes decisions, not just a box someone checks.",
+      "Raising a risk concern here is treated as useful, never as pessimism.",
+      "Everyone on this team could independently name our top risks right now, and agree.",
+      "We regularly run pre-mortems or similar exercises before something goes wrong, not just after."
+    ]
+  },
+  {
+    name: "Communication",
+    sub: "The pattern behind Tenerife, the Ever Given, and Challenger.",
+    items: [
+      "People rarely work on the wrong thing because of stale or missing information.",
+      "Critical information lives somewhere visible to everyone, not trapped in one inbox or one conversation.",
+      "Bad news reaches leadership quickly and without being softened along the way.",
+      "Different teams here can understand each other's status without a translator.",
+      "\u201cI had no idea that was happening\u201d is rare, not a running joke."
+    ]
+  },
+  {
+    name: "Quality",
+    sub: "The pattern behind Surfside, Texas City, and Grenfell Tower.",
+    items: [
+      "We rarely compromise our quality standard just to hit a date.",
+      "Our technical debt is tracked and actively paid down, not just growing quietly.",
+      "Everyone here agrees on what \u201cdone\u201d actually means, in writing.",
+      "Bugs and rework are not a major, ongoing drain on our capacity.",
+      "The person who insists on doing it right is respected at least as much as the person who ships fast."
+    ]
+  },
+  {
+    name: "Stakeholder",
+    sub: "The pattern behind Aberfan, Grenfell Tower, and Rana Plaza.",
+    items: [
+      "We can name our key stakeholders and what each of them actually needs.",
+      "We hear directly from users or customers on a short, regular cycle \u2014 not sporadically.",
+      "What we build is something people actually asked for and use.",
+      "We treat user complaints as data, not as noise.",
+      "Someone in the room consistently advocates for the user, by name, every time."
+    ]
+  },
+  {
+    name: "Integration",
+    sub: "The pattern behind Piper Alpha, Healthcare.gov, and the Key Bridge.",
+    items: [
+      "Integration is not the painful, unpredictable part of our process.",
+      "Our teams\u2019 priorities and working methods are actually compatible with each other.",
+      "We have one reliable, end-to-end environment that reflects the real system.",
+      "A change in one part of our system rarely surprises a different part.",
+      "Our teams are organized around what we deliver, not just around technical function."
+    ]
+  }
+];
+
+const scores = {}; // key "p-i" -> value
+
+function buildUI(){
+  const container = document.getElementById('patterns');
+  PATTERNS.forEach((pattern, pIdx) => {
+    const section = document.createElement('div');
+    section.className = 'pattern';
+    section.innerHTML = `
+      <div class="pattern-head">
+        <span class="pnum">0${pIdx+1}</span>
+        <h2 class="pname">${pattern.name}</h2>
+      </div>
+      <p class="psub">${pattern.sub}</p>
+      <div class="statements"></div>
+      <div class="scale-labels"><span>1 rarely true</span><span>5 consistently true</span></div>
+      <div class="subtotal-row">
+        <span>Subtotal, ${pattern.name}</span>
+        <span class="val"><span id="sub-${pIdx}">0</span><span class="of"> / 25</span></span>
+      </div>
+      <button type="button" class="btn clear-section" data-pattern="${pIdx}">Clear this section</button>
+    `;
+    const stmtWrap = section.querySelector('.statements');
+    pattern.items.forEach((text, iIdx) => {
+      const key = `${pIdx}-${iIdx}`;
+      const row = document.createElement('div');
+      row.className = 'statement';
+      const globalNum = pIdx*5 + iIdx + 1;
+      row.innerHTML = `
+        <div class="stext"><span class="sid">${globalNum}.</span>${text}</div>
+        <div class="scale" data-key="${key}">
+          ${[1,2,3,4,5].map(v => `<button type="button" class="chip" data-val="${v}">${v}</button>`).join('')}
+        </div>
+      `;
+      stmtWrap.appendChild(row);
+    });
+    container.appendChild(section);
+  });
+
+  // Attach click handlers
+  document.querySelectorAll('.scale').forEach(scaleEl => {
+    const key = scaleEl.getAttribute('data-key');
+    scaleEl.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        scores[key] = parseInt(chip.getAttribute('data-val'), 10);
+        scaleEl.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        updateTallies();
+      });
+    });
+  });
+
+  document.querySelectorAll('.clear-section').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pIdx = btn.getAttribute('data-pattern');
+      const section = btn.closest('.pattern');
+      section.querySelectorAll('.scale').forEach(scaleEl => {
+        const key = scaleEl.getAttribute('data-key');
+        delete scores[key];
+        scaleEl.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      });
+      updateTallies();
+    });
+  });
+}
+
+function updateTallies(){
+  let grand = 0;
+  let answered = Object.keys(scores).length;
+  PATTERNS.forEach((pattern, pIdx) => {
+    let sub = 0;
+    pattern.items.forEach((_, iIdx) => {
+      const v = scores[`${pIdx}-${iIdx}`];
+      if (v) sub += v;
+    });
+    document.getElementById(`sub-${pIdx}`).textContent = sub;
+    grand += sub;
+  });
+  document.getElementById('runningTotal').textContent = grand;
+  document.getElementById('tallyText').textContent = `${answered} of 25 answered`;
+  document.getElementById('progressFill').style.width = `${(answered/25)*100}%`;
+
+  if (answered === 25) {
+    showResults(grand);
+  } else {
+    document.getElementById('results').style.display = 'none';
+  }
+}
+
+function getBand(total){
+  if (total >= 105) return {label:'RESILIENT', cls:'ok', desc:'Strong across all five patterns. Keep the discipline \u2014 this is the state every disaster in this book was missing, not a permanent condition.'};
+  if (total >= 85) return {label:'ADAPTIVE', cls:'ok', desc:'Solid foundation, real gaps. Find your single lowest subtotal below and make it this quarter\u2019s priority.'};
+  if (total >= 65) return {label:'DEVELOPING', cls:'warn', desc:'Meaningful vulnerability in at least one pattern. Treat your lowest-scoring pattern as an active risk, not a someday project.'};
+  if (total >= 45) return {label:'AT RISK', cls:'warn', desc:'Multiple patterns are exposed. This is the range where the disasters in this book were sitting before the event that made them famous.'};
+  return {label:'CRITICAL', cls:'', desc:'This combination of patterns has, historically, preceded catastrophic failure. Escalate before you optimize.'};
+}
+
+function showResults(grand){
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('grandTotal').textContent = grand;
+  const band = getBand(grand);
+  const bandEl = document.getElementById('bandLabel');
+  bandEl.textContent = band.label;
+  bandEl.className = 'band' + (band.cls ? ' ' + band.cls : '');
+  document.getElementById('bandDesc').textContent = band.desc;
+
+  const barsEl = document.getElementById('bars');
+  barsEl.innerHTML = '';
+  PATTERNS.forEach((pattern, pIdx) => {
+    let sub = 0;
+    pattern.items.forEach((_, iIdx) => { sub += scores[`${pIdx}-${iIdx}`] || 0; });
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = `
+      <div class="bar-label"><span>${pattern.name}</span><span>${sub} / 25</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(sub/25)*100}%"></div></div>
+    `;
+    barsEl.appendChild(row);
+  });
+
+  document.getElementById('results').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function copyResults(){
+  let grand = 0;
+  let lines = ['THE FATAL FIVE ASSESSMENT \u2014 RESULTS', ''];
+  PATTERNS.forEach((pattern, pIdx) => {
+    let sub = 0;
+    pattern.items.forEach((_, iIdx) => { sub += scores[`${pIdx}-${iIdx}`] || 0; });
+    grand += sub;
+    lines.push(`${pattern.name}: ${sub} / 25`);
+  });
+  const band = getBand(grand);
+  lines.push('', `TOTAL: ${grand} / 125 \u2014 ${band.label}`, band.desc);
+  const text = lines.join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Results copied to clipboard.');
+  }).catch(() => {
+    prompt('Copy your results:', text);
+  });
+}
+
+function resetAll(){
+  if (!confirm('Clear all answers and start over?')) return;
+  Object.keys(scores).forEach(k => delete scores[k]);
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  updateTallies();
+  document.getElementById('results').style.display = 'none';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+buildUI();
+updateTallies();
+</script>
+
+<footer>
+  <div class="wrap" style="padding:0;">
+    THE FATAL FIVE — an assessment instrument from the book by Jeff Bourke.<br>
+    This tool runs entirely in your browser. No answers are transmitted, stored, or seen by anyone but you.<br>
+    thefatalfive.com<br><br>
+    &copy; 2026 Jeff Bourke. All rights reserved.
+  </div>
+</footer>
+
+</body>
+</html>

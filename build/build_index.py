@@ -1,38 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Fatal Five — Jeff Bourke</title>
-<meta name="description" content="Sixty-five disasters, one pattern. The Agile delivery framework behind The Fatal Five, by Jeff Bourke — 35-year EMS responder and Lead Release Train Engineer.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css">
+import sys
+sys.path.insert(0, '.')
+from header_footer import head, nav, footer
 
-</head>
-<body>
+hero_svg = """<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <rect width="400" height="300" fill="#e7e2d2"/>
+  <rect y="220" width="400" height="80" fill="#c9c2a8"/>
+  <rect x="60" y="205" width="46" height="18" fill="#b6ad8e"/>
+  <rect x="70" y="188" width="4" height="20" fill="#8a806a"/>
+  <rect x="92" y="188" width="4" height="20" fill="#8a806a"/>
+  <path d="M300 220 C 302 180, 296 150, 306 110 C 310 90, 300 70, 296 50" stroke="#4a453c" stroke-width="3" fill="none" opacity="0.55" stroke-linecap="round"/>
+  <path d="M306 110 C 316 100, 318 80, 312 60" stroke="#4a453c" stroke-width="2.4" fill="none" opacity="0.4" stroke-linecap="round"/>
+  <line x1="0" y1="220" x2="400" y2="220" stroke="#a89f8a" stroke-width="1"/>
+</svg>"""
 
-<header class="site">
-  <nav class="site">
-    <a class="brand" href="index.html">THE FATAL <span>FIVE</span></a>
-    <ul class="navlinks" id="navlinks">
-      <li><a href="index.html#framework">Framework</a></li>
-      <li><a href="index.html#book">The Book</a></li>
-      <li><a href="corpus/index.html">The 65 Cases</a></li>
-      <li><a href="field-notes/index.html">Field Notes</a></li>
-      <li><a href="index.html#speaking">Speaking</a></li>
-      <li><a href="index.html#about">About</a></li>
-    </ul>
-    <button class="navtoggle" id="navtoggle" aria-label="Menu">&#9776;</button>
-  </nav>
-</header>
-<script>
-document.getElementById('navtoggle').addEventListener('click', function(){
-  document.getElementById('navlinks').classList.toggle('open');
-});
-</script>
+icon_risk = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h9l3 3v15H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>'
+icon_comm = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 5h13v9H8l-5 4z"/><line x1="16" y1="8" x2="21" y2="8"/><line x1="16" y1="12" x2="19" y2="12"/></svg>'
+icon_quality = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l7 3v6c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6z"/><path d="M9 12l3-3M9 9l3 3"/></svg>'
+icon_stake = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 10l4-4 4 4M7 6v9a3 3 0 003 3h1"/><circle cx="18" cy="8" r="2.4"/><path d="M18 13v-.5"/></svg>'
+icon_integ = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 12a4 4 0 014-4h2"/><path d="M16 12a4 4 0 01-4 4H10"/><circle cx="6" cy="12" r="2.2"/><circle cx="18" cy="12" r="2.2"/></svg>'
 
+cards = [
+    (icon_risk, "Risk", "The Filed Warning",
+     "The recommendations that would have winterized the Texas grid were written in 2011. They sat unimplemented for a decade, until Winter Storm Uri killed more than two hundred people in 2021.",
+     "the risk register that gets updated and never acted on."),
+    (icon_comm, "Communication", "The Message That Never Arrived",
+     "The night before Challenger launched, engineers argued against it. Their data never reached the people who made the call in the form it needed to.",
+     "status reports that launder red into green at every layer."),
+    (icon_quality, "Quality", "The Debt Comes Due",
+     "The hook that started the Camp Fire was ninety-nine years old. Inspection had been deferred as a matter of business strategy. Eighty-five people died.",
+     "the test suite marked “flaky” and skipped to hit the date."),
+    (icon_stake, "Stakeholder", "The Ignored Voice",
+     "Grenfell Tower's residents predicted the fire in writing, on a blog, years before it happened. Seventy-two people died. Nobody with authority was reading.",
+     "the engineer who stopped raising concerns because she learned the answer."),
+    (icon_integ, "Integration", "The Seams",
+     "Healthcare.gov launched with fifty-five contractors and no one responsible for making them work together. It collapsed on day one.",
+     "the failure that lives between two teams that each did their job."),
+]
+
+card_html = ""
+for icon, name, title, body, org in cards:
+    card_html += f"""
+      <div class="card">
+        {icon}
+        <div class="eyebrow" style="margin-bottom:4px;">{name}</div>
+        <h3>{title}</h3>
+        <p>{body}</p>
+        <div class="itorg"><em>In your organization:</em> {org}</div>
+        <a class="link cardlink" href="index.html#book">Full analysis in the book &rarr;</a>
+      </div>"""
+
+field_notes_cards = """
+      <a class="fn-card" href="field-notes/the-ship-everyone-knew-was-a-gamble.html">
+        <div class="tag">Case File &middot; Aviation</div>
+        <h3>The Ship That Everyone Knew Was a Gamble</h3>
+        <p>The Hindenburg's operator flew the airship it could fuel, not the one it wanted &mdash; and trusted two years of routine over the hazard that routine was managing.</p>
+        <div class="readmore link">Read the case &rarr;</div>
+      </a>
+      <a class="fn-card" href="field-notes/the-change-order-nobody-recalculated.html">
+        <div class="tag">Case File &middot; Construction</div>
+        <h3>The Change Order Nobody Re-Calculated</h3>
+        <p>A fabrication convenience doubled the load on the Hyatt Regency's walkway connections. A sign-off checked the drawing, not the physics.</p>
+        <div class="readmore link">Read the case &rarr;</div>
+      </a>
+      <a class="fn-card" href="field-notes/the-fire-that-happened-before-i-was-born.html">
+        <div class="tag">Chapter 8 Preview &middot; Personal</div>
+        <h3>The Fire That Happened Before I Was Born</h3>
+        <p>Twenty minutes from where I grew up, 167 people died under a circus tent in eleven minutes. A known hazard, flagged, and normalized instead of fixed.</p>
+        <div class="readmore link">Read the case &rarr;</div>
+      </a>"""
+
+body = f"""
+{nav()}
 
 <main>
   <div class="wrap">
@@ -47,16 +85,7 @@ document.getElementById('navtoggle').addEventListener('click', function(){
         </div>
         <div class="credential-line">Jeff Bourke &middot; 35-year EMT &middot; DHS Center for Domestic Preparedness graduate &middot; Lead Release Train Engineer, Fortune 25 healthcare</div>
       </div>
-      <div class="hero-art"><svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-  <rect width="400" height="300" fill="#e7e2d2"/>
-  <rect y="220" width="400" height="80" fill="#c9c2a8"/>
-  <rect x="60" y="205" width="46" height="18" fill="#b6ad8e"/>
-  <rect x="70" y="188" width="4" height="20" fill="#8a806a"/>
-  <rect x="92" y="188" width="4" height="20" fill="#8a806a"/>
-  <path d="M300 220 C 302 180, 296 150, 306 110 C 310 90, 300 70, 296 50" stroke="#4a453c" stroke-width="3" fill="none" opacity="0.55" stroke-linecap="round"/>
-  <path d="M306 110 C 316 100, 318 80, 312 60" stroke="#4a453c" stroke-width="2.4" fill="none" opacity="0.4" stroke-linecap="round"/>
-  <line x1="0" y1="220" x2="400" y2="220" stroke="#a89f8a" stroke-width="1"/>
-</svg></div>
+      <div class="hero-art">{hero_svg}</div>
     </section>
   </div>
 
@@ -75,47 +104,7 @@ document.getElementById('navtoggle').addEventListener('click', function(){
         <h2>The five failures behind every disaster</h2>
         <p style="color:var(--ink-dim)">Each one is visible before the catastrophe. Each one has a corporate twin you've probably seen this quarter.</p>
       </div>
-      <div class="cards">
-      <div class="card">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h9l3 3v15H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
-        <div class="eyebrow" style="margin-bottom:4px;">Risk</div>
-        <h3>The Filed Warning</h3>
-        <p>The recommendations that would have winterized the Texas grid were written in 2011. They sat unimplemented for a decade, until Winter Storm Uri killed more than two hundred people in 2021.</p>
-        <div class="itorg"><em>In your organization:</em> the risk register that gets updated and never acted on.</div>
-        <a class="link cardlink" href="index.html#book">Full analysis in the book &rarr;</a>
-      </div>
-      <div class="card">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 5h13v9H8l-5 4z"/><line x1="16" y1="8" x2="21" y2="8"/><line x1="16" y1="12" x2="19" y2="12"/></svg>
-        <div class="eyebrow" style="margin-bottom:4px;">Communication</div>
-        <h3>The Message That Never Arrived</h3>
-        <p>The night before Challenger launched, engineers argued against it. Their data never reached the people who made the call in the form it needed to.</p>
-        <div class="itorg"><em>In your organization:</em> status reports that launder red into green at every layer.</div>
-        <a class="link cardlink" href="index.html#book">Full analysis in the book &rarr;</a>
-      </div>
-      <div class="card">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l7 3v6c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V6z"/><path d="M9 12l3-3M9 9l3 3"/></svg>
-        <div class="eyebrow" style="margin-bottom:4px;">Quality</div>
-        <h3>The Debt Comes Due</h3>
-        <p>The hook that started the Camp Fire was ninety-nine years old. Inspection had been deferred as a matter of business strategy. Eighty-five people died.</p>
-        <div class="itorg"><em>In your organization:</em> the test suite marked “flaky” and skipped to hit the date.</div>
-        <a class="link cardlink" href="index.html#book">Full analysis in the book &rarr;</a>
-      </div>
-      <div class="card">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 10l4-4 4 4M7 6v9a3 3 0 003 3h1"/><circle cx="18" cy="8" r="2.4"/><path d="M18 13v-.5"/></svg>
-        <div class="eyebrow" style="margin-bottom:4px;">Stakeholder</div>
-        <h3>The Ignored Voice</h3>
-        <p>Grenfell Tower's residents predicted the fire in writing, on a blog, years before it happened. Seventy-two people died. Nobody with authority was reading.</p>
-        <div class="itorg"><em>In your organization:</em> the engineer who stopped raising concerns because she learned the answer.</div>
-        <a class="link cardlink" href="index.html#book">Full analysis in the book &rarr;</a>
-      </div>
-      <div class="card">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 12a4 4 0 014-4h2"/><path d="M16 12a4 4 0 01-4 4H10"/><circle cx="6" cy="12" r="2.2"/><circle cx="18" cy="12" r="2.2"/></svg>
-        <div class="eyebrow" style="margin-bottom:4px;">Integration</div>
-        <h3>The Seams</h3>
-        <p>Healthcare.gov launched with fifty-five contractors and no one responsible for making them work together. It collapsed on day one.</p>
-        <div class="itorg"><em>In your organization:</em> the failure that lives between two teams that each did their job.</div>
-        <a class="link cardlink" href="index.html#book">Full analysis in the book &rarr;</a>
-      </div>
+      <div class="cards">{card_html}
       </div>
     </div>
   </section>
@@ -180,25 +169,7 @@ document.getElementById('navtoggle').addEventListener('click', function(){
         <div class="eyebrow">Field Notes</div>
         <h2>Case files from the research corpus</h2>
       </div>
-      <div class="fn-grid">
-      <a class="fn-card" href="field-notes/the-ship-everyone-knew-was-a-gamble.html">
-        <div class="tag">Case File &middot; Aviation</div>
-        <h3>The Ship That Everyone Knew Was a Gamble</h3>
-        <p>The Hindenburg's operator flew the airship it could fuel, not the one it wanted &mdash; and trusted two years of routine over the hazard that routine was managing.</p>
-        <div class="readmore link">Read the case &rarr;</div>
-      </a>
-      <a class="fn-card" href="field-notes/the-change-order-nobody-recalculated.html">
-        <div class="tag">Case File &middot; Construction</div>
-        <h3>The Change Order Nobody Re-Calculated</h3>
-        <p>A fabrication convenience doubled the load on the Hyatt Regency's walkway connections. A sign-off checked the drawing, not the physics.</p>
-        <div class="readmore link">Read the case &rarr;</div>
-      </a>
-      <a class="fn-card" href="field-notes/the-fire-that-happened-before-i-was-born.html">
-        <div class="tag">Chapter 8 Preview &middot; Personal</div>
-        <h3>The Fire That Happened Before I Was Born</h3>
-        <p>Twenty minutes from where I grew up, 167 people died under a circus tent in eleven minutes. A known hazard, flagged, and normalized instead of fixed.</p>
-        <div class="readmore link">Read the case &rarr;</div>
-      </a>
+      <div class="fn-grid">{field_notes_cards}
       </div>
       <div class="fn-cta"><a class="link" href="field-notes/index.html">All field notes &rarr;</a></div>
     </div>
@@ -272,25 +243,14 @@ document.getElementById('navtoggle').addEventListener('click', function(){
   </section>
 </main>
 
-<footer class="site">
-  <div class="wrap">
-    <div class="fbrand">THE FATAL FIVE &middot; Jeff Bourke</div>
-    <div class="ftagline">The warnings are almost always there.</div>
-    <ul class="flinks">
-      <li><a href="index.html#framework">Framework</a></li>
-      <li><a href="index.html#book">The Book</a></li>
-      <li><a href="corpus/index.html">The 65 Cases</a></li>
-      <li><a href="field-notes/index.html">Field Notes</a></li>
-      <li><a href="index.html#speaking">Speaking</a></li>
-      <li><a href="index.html#about">About</a></li>
-      <li><a href="index.html#contact">Contact</a></li>
-    </ul>
-    <div class="fbottom">
-      <span>&copy; 2026 Jeff Bourke. All rights reserved.</span>
-      <span>LinkedIn &middot; Email</span>
-    </div>
-  </div>
-</footer>
-</body>
-</html>
+{footer()}
+"""
 
+html = head(
+    "The Fatal Five — Jeff Bourke",
+    "Sixty-five disasters, one pattern. The Agile delivery framework behind The Fatal Five, by Jeff Bourke — 35-year EMS responder and Lead Release Train Engineer.",
+) + body
+
+with open('/home/claude/fatalfive-repo/index.html', 'w') as f:
+    f.write(html)
+print("wrote index.html", len(html), "bytes")

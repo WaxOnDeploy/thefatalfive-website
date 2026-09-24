@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Change Order Nobody Re-Calculated — The Fatal Five</title>
+<meta name="description" content="The 1981 Hyatt Regency walkway collapse through the Fatal Five framework: a fabrication convenience that doubled a load-bearing connection's load, approved without a re-calculation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+
+</head>
+<body>
+
+<header class="site">
+  <nav class="site">
+    <a class="brand" href="../index.html">THE FATAL <span>FIVE</span></a>
+    <ul class="navlinks" id="navlinks">
+      <li><a href="../index.html#framework">Framework</a></li>
+      <li><a href="../index.html#book">The Book</a></li>
+      <li><a href="../corpus/index.html">The 65 Cases</a></li>
+      <li><a href="../field-notes/index.html">Field Notes</a></li>
+      <li><a href="../index.html#speaking">Speaking</a></li>
+      <li><a href="../index.html#about">About</a></li>
+    </ul>
+    <button class="navtoggle" id="navtoggle" aria-label="Menu">&#9776;</button>
+  </nav>
+</header>
+<script>
+document.getElementById('navtoggle').addEventListener('click', function(){
+  document.getElementById('navlinks').classList.toggle('open');
+});
+</script>
+
+
+<main>
+  <div class="narrow">
+    <article class="post">
+      <div class="meta">Case File &middot; Construction &middot; Case #61</div>
+      <h1>The Change Order Nobody Re-Calculated</h1>
+      <p class="dek">A Fatal Five case file</p>
+      <p>On the evening of July 17, 1981, more than 1,600 people packed the atrium of the Hyatt Regency in Kansas City for a weekly tea dance &mdash; the kind of casual, low-stakes event a hotel runs a hundred times a year. Three suspended walkways crossed the atrium at the second, third, and fourth floors, stacked directly above one another, packed with people watching the dance below. At 7:05 PM, the fourth-floor walkway tore loose from its connections and dropped straight through the third-floor walkway onto the crowd beneath. 114 people died. It remains one of the deadliest structural failures in U.S. history &mdash; and it wasn't caused by an earthquake, a material defect, or an unforeseeable load. It was caused by a single design change that nobody re-ran the numbers on.</p>
+      <p><strong>The original design was already carrying its full rated load. The “equivalent” fix doubled it.</strong></p>
+      <p>The atrium's walkways were originally engineered to hang from a set of long steel rods running continuously from the roof down through all three walkway levels, each walkway's box beam supported by a nut threaded onto that single rod. During construction, the fabricator found this design difficult to build &mdash; threading a nut precisely at the mid-span point of a rod that also had to pass load through a second walkway above it was awkward on-site. So the fabricator proposed a change: instead of one continuous rod carrying both walkways, use two separate rods &mdash; one from the roof to the fourth-floor walkway, a second from the fourth-floor walkway down to the second-floor walkway. To the people signing off, it looked like a trivial fabrication convenience. It wasn't. In the original design, each connection point carried the weight of one walkway. In the revised design, the fourth-floor connection now had to carry the weight of <em>two</em> walkways &mdash; its own, plus the one hanging beneath it &mdash; through a box-beam-to-hanger connection never engineered for double load. The change went through review. Nobody re-ran the calculation against the new load path.</p>
+      <p>That's Pattern 3 in the Fatal Five framework: <strong>quality management failure.</strong> Not a shortcut skipped under pressure &mdash; a change that <em>looked</em> equivalent, approved by people who assumed someone else had verified the math, moving through a review process that checked the drawing without checking the physics. Any engineer, any reviewer, any structural inspector who ran the numbers on the as-built connection would have found it was carrying roughly double its rated capacity from day one. Nobody did, until the rods finally failed under the ordinary, foreseeable weight of a crowd standing on a walkway &mdash; which is, after all, the one thing a walkway is built to hold.</p>
+      <p><strong>The second failure is the one every retrospective in this book keeps finding.</strong></p>
+      <p>The fabricator's proposed change traveled from the steel detailer to the structural engineer of record for a sign-off that, per later investigation, amounted to a stamp on a drawing rather than an independent re-analysis &mdash; a single point in a long chain where a genuine structural review was assumed to have already happened somewhere else. That's Pattern 2: <strong>communication management failure.</strong> Not a message that got lost &mdash; a decision that moved through multiple hands, each one trusting that the actual engineering judgment lived with somebody else in the chain, until it turned out to live with no one.</p>
+      <p><strong>You've approved this exact change. It just wasn't made of steel.</strong></p>
+      <p>You know this pattern from the other side of the table: the “equivalent” refactor that changes which service owns a piece of state, approved because it passed code review, when the load characteristics of the <em>new</em> dependency were never re-modeled against the <em>old</em> one's assumptions. The migration that looked like a lift-and-shift until it quietly doubled what a single component had to carry. The architecture decision that got a sign-off from someone who assumed the load analysis happened in an earlier conversation they weren't in. A quality failure paired with a communication failure &mdash; a change that looked equivalent, and a sign-off that trusted the chain instead of verifying the connection &mdash; is one of the clearest, most recurring combinations in the research corpus, and the Hyatt Regency is one of the cleanest examples of it: a fabrication convenience, a missing re-calculation, and a stamp that stood in for a review. It took less than four seconds for the walkway to fall. It took an entire, ordinary approval process to make sure nobody caught it first.</p>
+
+      <p style="font-size:14px; color:var(--ink-dim); font-style:italic; margin-top:28px;">The Hyatt Regency walkway collapse is case #61 in the Fatal Five research corpus &mdash; one of 65 disasters spanning 175 years studied to identify the five failure patterns behind catastrophic organizational breakdowns. Read more in <a class="link" href="../index.html#book">The Fatal Five</a>, or take the free <a class="link" href="../drift-check/index.html">4-question Drift Check</a> to see which pattern shows up first in your own team.</p>
+      <div class="backlink">
+        <a class="link" href="index.html">&larr; All field notes</a>
+      </div>
+    </article>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="fbrand">THE FATAL FIVE &middot; Jeff Bourke</div>
+    <div class="ftagline">The warnings are almost always there.</div>
+    <ul class="flinks">
+      <li><a href="../index.html#framework">Framework</a></li>
+      <li><a href="../index.html#book">The Book</a></li>
+      <li><a href="../corpus/index.html">The 65 Cases</a></li>
+      <li><a href="../field-notes/index.html">Field Notes</a></li>
+      <li><a href="../index.html#speaking">Speaking</a></li>
+      <li><a href="../index.html#about">About</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+    <div class="fbottom">
+      <span>&copy; 2026 Jeff Bourke. All rights reserved.</span>
+      <span>LinkedIn &middot; Email</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
+
