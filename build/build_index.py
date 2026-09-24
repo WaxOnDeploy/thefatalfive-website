@@ -136,6 +136,7 @@ body = f"""
             <li>The Fatal Five assessment and countermeasures you can run in your organization Monday</li>
           </ul>
           <a class="btn" href="#contact">Get launch updates</a>
+          <span style="margin-left:14px;"><a class="link" href="preface/index.html">Read the preface &rarr;</a></span>
           <div class="status-line">Publishing 2026 &middot; Self-published, professionally edited</div>
           <div class="pullquote">&ldquo;Heroism, examined closely, is what preparation looks like on its worst day.&rdquo;</div>
         </div>
@@ -148,7 +149,7 @@ body = f"""
       <div class="about">
         <div class="about-photos">
           <img src="assets/images/jeff-headshot.jpg" alt="Jeff Bourke">
-          <img src="assets/images/pi-planning-thinking.jpg" alt="Jeff Bourke at a PI Planning session">
+          <img src="assets/images/ems-comfort-patient.jpg" alt="Jeff Bourke, as a young EMT, comforting a young patient in the back of an ambulance">
         </div>
         <div>
           <div class="eyebrow">About</div>
