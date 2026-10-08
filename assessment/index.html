@@ -326,6 +326,25 @@
     a{color:#111;}
     .pattern, #results{break-inside:avoid;}
   }
+
+  /* Email signup */
+  .signup{border:1px solid var(--line); border-left:3px solid var(--accent); padding:24px 24px 20px; margin:8px 0 48px; background:var(--ink-2);}
+  .signup h3{margin:0 0 6px; font-size:19px; font-weight:600;}
+  .signup p.sub{margin:0 0 18px; color:var(--paper-dim); font-size:15px;}
+  .signup .row{display:flex; gap:10px; flex-wrap:wrap;}
+  .signup label.field{display:flex; flex-direction:column; gap:6px; flex:1 1 200px; font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.08em; color:var(--paper-faint);}
+  .signup input[type=text], .signup input[type=email]{font-family:'IBM Plex Serif', serif; font-size:16px; color:var(--paper); background:var(--ink); border:1px solid var(--line); border-radius:2px; padding:10px 12px;}
+  .signup input:focus{outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent);}
+  .signup .consent{display:flex; gap:10px; align-items:flex-start; margin:16px 0 4px; font-size:14px; color:var(--paper-dim);}
+  .signup .consent input{margin-top:4px; accent-color:var(--accent);}
+  .signup .hp{position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;}
+  .signup .submit-row{display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-top:14px;}
+  .signup .msg{font-size:14px; margin:0;}
+  .signup .msg.ok{color:var(--ok);}
+  .signup .msg.err{color:var(--accent);}
+  .signup .fine{margin:14px 0 0; font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--paper-faint); line-height:1.6;}
+  .signup[hidden]{display:none;}
+  @media print{ .signup{display:none;} }
 </style>
 </head>
 <body>
@@ -363,6 +382,29 @@
       <button class="btn" onclick="copyResults()">Copy results as text</button>
       <button class="btn" onclick="resetAll()">Start over</button>
     </div>
+
+    <form class="signup" id="signup" novalidate hidden>
+      <h3>Get the warning signs before the book is out</h3>
+      <p class="sub">Occasional emails from Jeff: one Fatal Five case at a time, what to watch for on your own team, and the launch date. No spam, and you can unsubscribe in one click.</p>
+      <div class="row">
+        <label class="field">FIRST NAME (OPTIONAL)
+          <input type="text" name="firstName" id="su-name" autocomplete="given-name" maxlength="50">
+        </label>
+        <label class="field">EMAIL
+          <input type="email" name="email" id="su-email" autocomplete="email" required maxlength="254">
+        </label>
+      </div>
+      <div class="hp" aria-hidden="true">
+        <label>Company <input type="text" name="company" id="su-company" tabindex="-1" autocomplete="off"></label>
+      </div>
+      <label class="consent"><input type="checkbox" id="su-consent" required> <span>Yes, email me about The Fatal Five. I'll confirm by clicking a link in my inbox.</span></label>
+      <div id="su-turnstile"></div>
+      <div class="submit-row">
+        <button type="submit" class="btn primary" id="su-btn">Sign me up</button>
+        <p class="msg" id="su-msg" role="status" aria-live="polite"></p>
+      </div>
+      <p class="fine">Only your name and email are sent. Your assessment answers never leave this page.</p>
+    </form>
   </section>
 </div>
 
@@ -585,12 +627,92 @@ function resetAll(){
 
 buildUI();
 updateTallies();
+
+// ---- Email signup (spam-protected; see /api/subscribe.js) ----
+(function(){
+  const form = document.getElementById('signup');
+  const msg = document.getElementById('su-msg');
+  const btn = document.getElementById('su-btn');
+  let token = null, turnstileWidget = null;
+
+  function say(text, kind){ msg.textContent = text; msg.className = 'msg' + (kind ? ' ' + kind : ''); }
+
+  async function getToken(){
+    try {
+      const r = await fetch('/api/subscribe', {method:'GET', cache:'no-store'});
+      if (!r.ok) return null;
+      const d = await r.json();
+      if (d.turnstileSiteKey && !turnstileWidget) loadTurnstile(d.turnstileSiteKey);
+      return d.token || null;
+    } catch(e){ return null; }
+  }
+
+  function loadTurnstile(siteKey){
+    const s = document.createElement('script');
+    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    s.async = true;
+    s.onload = () => {
+      turnstileWidget = window.turnstile.render('#su-turnstile', {sitekey: siteKey, theme: 'dark'});
+    };
+    document.head.appendChild(s);
+  }
+
+  // The form appears with the results; fetch a fresh timing token then.
+  const results = document.getElementById('results');
+  new MutationObserver(async () => {
+    if (results.style.display !== 'none' && form.hidden) {
+      token = await getToken();
+      if (token) form.hidden = false;   // hide the form entirely if signup isn't set up yet
+    }
+  }).observe(results, {attributes:true, attributeFilter:['style']});
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('su-email').value.trim();
+    const firstName = document.getElementById('su-name').value.trim();
+    const consent = document.getElementById('su-consent').checked;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { say('Please enter a valid email address.', 'err'); return; }
+    if (!consent) { say('Please tick the box to confirm you want the emails.', 'err'); return; }
+    btn.disabled = true; say('Sending\u2026');
+    const payload = {
+      email, firstName, consent,
+      company: document.getElementById('su-company').value,
+      token,
+      turnstileToken: turnstileWidget !== null && window.turnstile ? window.turnstile.getResponse(turnstileWidget) : undefined,
+    };
+    try {
+      const r = await fetch('/api/subscribe', {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (r.ok && d.ok) {
+        form.querySelectorAll('input, button').forEach(el => el.disabled = true);
+        say('Almost done: check your inbox and click the confirmation link.', 'ok');
+        return;
+      }
+      const errors = {
+        invalid_email: 'That email address doesn\u2019t look right. Please check it.',
+        invalid_name: 'Please use letters only in the name field.',
+        consent_required: 'Please tick the box to confirm you want the emails.',
+        session_expired: 'This page has been open a while. Please try again.',
+        verification_failed: 'Please complete the verification check and try again.',
+        too_many: 'Too many attempts. Please try again later.',
+      };
+      say(errors[d.error] || 'Something went wrong. Please try again in a few minutes.', 'err');
+      if (d.error === 'session_expired') token = await getToken();
+    } catch(err) {
+      say('Something went wrong. Please try again in a few minutes.', 'err');
+    }
+    btn.disabled = false;
+    if (turnstileWidget !== null && window.turnstile) window.turnstile.reset(turnstileWidget);
+  });
+})();
 </script>
 
 <footer>
   <div class="wrap" style="padding:0;">
     THE FATAL FIVE — an assessment instrument from the book by Jeff Bourke.<br>
-    This tool runs entirely in your browser. No answers are transmitted, stored, or seen by anyone but you.<br>
+    This tool runs entirely in your browser. No answers are transmitted, stored, or seen by anyone but you. If you sign up for emails, only your name and email address are sent.<br>
     thefatalfive.com<br><br>
     &copy; 2026 Jeff Bourke. All rights reserved.
   </div>
